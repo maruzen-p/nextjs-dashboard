@@ -1,5 +1,17 @@
 "use server";
 
+import { z } from "zod";
+
+const FormSchema = z.object({
+  id: z.string(),
+  customerId: z.string(),
+  amount: z.coerce.number(),
+  status: z.enum(["pending", "paid"]),
+  data: z.string(),
+});
+
+const CreateInvoice = FormSchema.omit({ id: true, data: true });
+
 export async function createInvoice(formData: FormData) {
   const rawFormData = {
     customerId: formData.get("customerId"),
@@ -8,4 +20,5 @@ export async function createInvoice(formData: FormData) {
   };
   // Test it out
   console.log(rawFormData);
+  console.log(typeof rawFormData.amount);
 }
